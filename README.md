@@ -23,3 +23,34 @@ menurut saya, framework Django dijadikan permulaan dalam pembelajaran perangkat 
 
 Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya?
 Secara umum, penjelasan materi sudah cukup membantu, tetapi akan lebih baik jika tujuan pembelajaran dijelaskan dengan lebih jelas di awal sehingga mahasiswa paham arah dan tujuan dari praktikum yang sedang dijalani. Selain itu, contoh kode yang diberikan sebaiknya ditampilkan secara utuh, bukan hanya potongan, karena bagi pemula seringkali sulit menyambungkan potongan kode
+
+
+======== TUGAS 3 ========
+Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
+Data delivery kita perlukan agar data pada server bisa digunakan oleh berbagai macam perangkat misalnya web, mobile, atau aplikasi lainnya dengan format standar. dengan data delivery, sistem akan lebih fleksibel, mudah diintegrasikan, dan dapat berkembang tanpa mengubah struktur utama atau inti dari aplikasi.
+
+Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
+diantara XML dan JSON, keduanya memiliki kelebihannya masing-masing, namun JSON merupakan turunan langsung dari JavaScript Object yang dapat digunakan dengan mudah di aplikasi web modern tanpa proses yang panjang. selain itu, JSON lebih efesien karena lebih ringan, ringkas, mudah dipahami dan diproses.
+
+Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut?
+is_valid adalah method dari Django yang akan mengakibatkan Django mengikat data ke form dan ketika dipanggil, Django akan mengecek apakah data sesuai dengan tipenya dan apakah semua field sudah terisi, yang akan mengembalikan True atau False.
+
+
+Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
+CSRF (Cross-Site Request Forgery) adalah salah satu serangan yang paling umum pada aplikasi web. serangan ini bekerja dengan menipu browser user dengan mengirimkan request berbahaya ke server, misalnya seorang user melakukan login ke suatu situs online, lalu penyerang mengirimkan link berbahaya ke situs korban, yang jika ditekan akan mengakibatkan akun dari user (korban) dibajak. oleh karena itu kita dapat mencegah hal tersebut dengan cara menambahkan csrf_token yang merupakan salah satu mekanisme pertahanan di Django. setiap kali form ditampilkan, Django akan menyediakan token unik yang bisa digunakan dalam waktu tertentu sampai sesinya berakhir. apabila kita tidak menambahkan csrf_token di form, maka Django akan menganggap form tersebut tidak aman dan menjadi celah bagi penyerang untuk menyerang seperti mengganti password, hapus data, dan transaksi illegal. 
+
+
+Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+1. langkah pertama yang saya lakukan adalah membuat direktori baru yaitu templates dan membuat html bernama base.html, dan mengisi html tersebut dengan potongan kode yang telah disediakan di tutorial2 sebelumnya.
+2. selanjutnya saya membuka settings.py dan menambahkan BASE_DIR pada 'DIRS' menjadi [BASE_DIR / 'templates'].
+3. setelah itu, pada direktori templates pada main, saya merubah menggunakan main.html menjadi base.html sebagai template utama yang akan digunakan.
+4. saya membuat folder baru pada direktori main, yaitu forms.py yang berisi class ProductForm(ModelForm) yang didalamnya terdapat fields yang saya sesuaikan dengan kategori yang ada pada models.py yang telah saya buat pada tugas2, yaitu "name", "price", "description", "thumbnail","category", "is_featured".
+5.  selanjutnya saya membuka views.py dan menambahkan import dan method baru seperti create_product dan show_product, selain itu saya juga mengedit beberapa potongan kode pada main.html dan urls.py menyesuaikan dari kebutuhan yang diminta pada tugas3.
+6. setelah menyesuaikan kode dengan perintah pada tugas3, saya mengecek dengan memerintah python manage.py runserver dan membuka localhost untuk memastikan apakah tampilan sudah sesuai dengan ekpektasi tugas.
+7. pada langkah selanjutnya adalah mengembalikan data dalam bentuk xml , json, xml id, dan json id. pada pengerjaan ini saya hanya mengikuti instruksi dari tutorial2, karena sama saja dan kode tetap berjalan dengan baik. dan selanjutnya saya menguji keempat link pada postman hingga output atau tampilannnya sesuai ekspektasi ketika dirun menggunakan xml, json, xml id, dan json id, lalu hasilnya saya screenshot dan cantumkan link nya pada readme bagian paling akhir di penjelasan ini. (pada line 55)
+
+Apakah ada feedback untuk asdos di tutorial 2 yang sudah kalian kerjakan?
+Secara umum, penjelasan materi sudah cukup membantu, tetapi akan lebih baik jika tujuan pembelajaran dijelaskan dengan lebih jelas di awal sehingga mahasiswa paham arah dan tujuan dari praktikum yang sedang dijalani. Selain itu, contoh kode yang diberikan sebaiknya ditampilkan secara utuh, bukan hanya potongan, karena bagi pemula seringkali sulit menyambungkan potongan kode.
+
+screenshot hasil postman :
+https://drive.google.com/drive/folders/1fr3H8o_B6l1rBhPQ_pLHSHl5DUbasl3d?usp=sharing

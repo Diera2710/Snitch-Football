@@ -20,4 +20,6 @@ class Product(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='bola')
     is_featured = models.BooleanField(default=False)
     
+    def __str__(self):
+        return self.name   
     
