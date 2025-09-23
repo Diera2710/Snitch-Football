@@ -55,3 +55,23 @@ Secara umum, penjelasan materi sudah cukup membantu, tetapi akan lebih baik jika
 screenshot hasil postman :
 https://drive.google.com/drive/folders/1fr3H8o_B6l1rBhPQ_pLHSHl5DUbasl3d?usp=sharing
 
+========================TUGAS 4========================
+Apa itu Django AuthenticationForm? Jelaskan juga kelebihan dan kekurangannya.
+Django AuthenticationForm adalah fungsi bawaan dari Django yang berfungsi untuk melakukan autentikasi dan login saat autentikasi berhasil, mencocokkan input username dan password dengan data. kelebihannya adalah tidak memerlukan form validasi manual dan ketika username atau password salah, secara otomatis akan menampilkan pesan error. kekurangannya adalah keamanan sangat sederhana hanya meminta username dan password tanpa pengamanan tambahan seperti OTP atau captcha dan penggunaannya masih terbatas saat melakukan login.
+
+Apa perbedaan antara autentikasi dan otorisasi? Bagaiamana Django mengimplementasikan kedua konsep tersebut?
+perbedaan autentikasi dan otorisasi yaitu autentikasi merupakan proses verifikasi identitas dari pengguna yaitu mengisi username dan password, sedangkan otorisasi merupakan proses yang memberikan akses apa saja yang bisa dilakukan olher pengguna saat pengguna telah berhasil login. implementasi pada Django yaitu meng-import 'from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import authenticate, login' dan '@login_required(login_url='/login')' 
+
+Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?
+kelebihan session yaitu penyimpanan data menjadi lebih aman dan data yang disimpan besar dan kompleks, sedangkan kekurangannya adalah server menjadi terbebani oleh user. kelebihan cookies adalah tidak membebani server, penggunaan yang sederhana, dan bisa diakses terus-menerus meskipun browser ditutup, sedangkan kekurangannya adalah bisa disalahgunakan misalnya lewat XSS dan mudah dimanipulasi.
+
+Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?
+ada beberapa ancaman keamanan dalam penggunaan cookies, diantaranya sebagai berikut :
+-ancaman XSS, cross site scripting menjadi salah satu risiko penggunaan cookies karena penyerang dapat menyisipkan script untuk mencuri cookie dari browser.
+-jika sessionID ada di cookie yang berhasil diambil oleh penyerang, penyerang tersebut bisa berpura-pura menjadi user dan mengambil semua data pribadi pengguna
+-data user dapat dimanipulasi oleh penyerang karena cookie disimpan di sisi client
+-kapasitas cookie terbatas
+cara Django mengatasi hal tersebut adalah dengan cara menyediakan beberapa mekanisme keamanan untuk meminimalisir risiko tersebut, diantaranya adalah data user tidak disimpan di cookie melainkan di session id saja, Django menambahkan token CSRF untuk melindungi data.
+
+Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step
