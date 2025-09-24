@@ -75,3 +75,14 @@ ada beberapa ancaman keamanan dalam penggunaan cookies, diantaranya sebagai beri
 cara Django mengatasi hal tersebut adalah dengan cara menyediakan beberapa mekanisme keamanan untuk meminimalisir risiko tersebut, diantaranya adalah data user tidak disimpan di cookie melainkan di session id saja, Django menambahkan token CSRF untuk melindungi data.
 
 Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step
+1. langkah pertama yang saya lakukan adalah menggunakan berkas tugas3 untuk ditambahkan fitur terbaru intuk Snitch football.
+2. saya menambahkan import UserCreationForm untuk mengimplementasikan fitur pendaftaran dari user dalam web yang memungkinkan pengguna baru dapat mendaftar dengan mudah di situs web.
+3. selanjutnya meng-import messages, dan register untuk fitur registrasi pada web.
+4. selanjutnya saya membuat fungsi login dan logout. saya membuat fungsi login dengan mengimport authentication login, agar jika autentikasi berhasil, user bisa login. saya membuat fungsi logout dengan mengimport logout bersamaan dengan autentikasi dan login. logout akan menghapus sesi pengguna yang masuk dan kembali ke halaman login user.
+5. selanjutnya saya melakukan registrasi beberapa akun dan membuat password yang berbeda untuk login, dan dari setiap akun tersebut saya menambahkan macam-macam product yang nantinya bisa ditampilkan di all product maupun di product yang dibuat sendiri oleh user yang mengimplementasikan menghubungkan product dengan user.
+7. yang terakhir untuk fitur last login saya menggunakan potongan kode 'if form.is_valid():
+    user = form.get_user()
+    login(request, user)
+    response = HttpResponseRedirect(reverse("main:show_main"))
+    response.set_cookie('last_login', str(datetime.datetime.now()))
+    return response' yang berfungsi untuk mendaftarkab cookie di response dengan timestamp 
