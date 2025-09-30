@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block meta %}
-<title>Create Product - Football Product</title>
+<title>Edit Product - Football Product</title>
 {% endblock meta %}
 
 {% block content %}
@@ -18,8 +20,8 @@
     <!-- Form -->
     <div class="bg-green-900 rounded-lg border border-yellow-600 p-6 sm:p-8 shadow-xl form-style">
       <div class="mb-8 text-center">
-        <h1 class="text-3xl font-bold text-yellow-300 mb-2">✨ Create New Product</h1>
-        <p class="text-green-200 italic">Add your magical football product to the collection</p>
+        <h1 class="text-3xl font-bold text-yellow-300 mb-2">⚡ Edit Product</h1>
+        <p class="text-green-200 italic">Update your magical football product</p>
       </div>
 
       <form method="POST" class="space-y-6">
@@ -50,7 +52,7 @@
           </a>
           <button type="submit" 
                   class="order-1 sm:order-2 flex-1 bg-yellow-400 text-green-950 px-6 py-3 rounded-md font-semibold hover:bg-yellow-500 transition-colors">
-            Publish Product
+            Update Product
           </button>
         </div>
       </form>

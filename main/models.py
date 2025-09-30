@@ -12,6 +12,7 @@ class Product(models.Model):
         ('jersey', 'Jersey'),
         ('kaos', 'Kaos'),
         ('celana', 'Celana'),
+        ('lainnya', 'Lainnnya')
     ]
 
     name = models.CharField(max_length=255)
@@ -24,4 +25,3 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name   
-    

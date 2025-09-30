@@ -86,3 +86,6 @@ Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-b
     response = HttpResponseRedirect(reverse("main:show_main"))
     response.set_cookie('last_login', str(datetime.datetime.now()))
     return response' yang berfungsi untuk mendaftarkab cookie di response dengan timestamp 
+
+
+==================================TUGAS 5=================================

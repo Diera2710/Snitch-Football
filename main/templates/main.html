@@ -1,56 +1,127 @@
-<h1>Snitch Football</h1>
+{% extends 'base.html' %}
 
-<a href="{% url 'main:create_product' %}">
-  <button>+ Add Product</button>
-</a>
+{% block meta %}
+<title>Football Product</title>
+{% endblock meta %}
 
+{% block content %}
+<div class="min-h-screen bg-green-950 px-6 py-10 font-serif">
+  <!-- Header -->
+  <div class="flex flex-col items-center mb-10">
+    <h1 class="text-4xl font-bold text-yellow-400 tracking-wider">⚡ Snitch Football Product</h1>
+    <p class="text-green-200 italic mt-2">Where magic meets the field</p>
+    <h5 class="text-sm text-yellow-300 mt-2">Last login: {{ last_login }}</h5>
 
-<a href="{% url 'main:logout' %}">
-  <button>Logout</button>
-</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'main:logout' %}" 
+         class="mt-4 inline-block px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded transition">
+        Logout
+      </a>
+    {% endif %}
+  </div>
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
-<hr>
-
-<a href="?filter=all">
-  <button type="button">All Product</button>
-</a>
-<a href="?filter=my">
-  <button type="button">My Product</button>
-</a> 
-
-{% if not product_list %}
-<p>Belum ada data produk pada football product.</p>
-{% else %}
-
-{% for product in product_list %}
-<div>
-  <h2>
-    <a href="{% url 'main:show_product' product.id %}">{{ product.name }}</a>
-  </h2>
-
-  <p>
-    <b>{{ product.get_category_display }}</b>
-    {% if product.is_featured %} | <b>Featured</b>{% endif %}
-    | <b>Rp {{ product.price }}</b>
-  </p>
-
-  {% if product.thumbnail %}
-    <img src="{{ product.thumbnail }}" alt="thumbnail" width="150" height="100">
-    <br />
-  {% endif %}
-
-  <p>{{ product.description|truncatewords:25 }}...</p>
-
-  <p>
-    <a href="{% url 'main:show_product' product.id %}">
-      <button>Read More</button>
+  <!-- Filter & Add Product -->
+  <div class="flex justify-center gap-4 mb-10">
+    <a href="?filter=all">
+      <button class="px-4 py-2 rounded bg-yellow-500 text-green-950 font-semibold hover:bg-yellow-600 transition">
+        All Product
+      </button>
     </a>
-  </p>
+    <a href="?filter=my">
+      <button class="px-4 py-2 rounded bg-green-800 text-yellow-200 font-semibold hover:bg-green-700 transition">
+        My Product
+      </button>
+    </a>
+    <a href="{% url 'main:create_product' %}">
+      <button class="px-4 py-2 rounded bg-yellow-400 text-green-950 font-semibold hover:bg-yellow-500 transition">
+        + Add Product
+      </button>
+    </a>
+  </div>
+
+  <!-- Product List -->
+  {% if not product_list %}
+    <p class="text-center text-yellow-200">Belum ada data produk pada Football Product.</p>
+  {% else %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for product in product_list %}
+        <!-- Product Card -->
+        <article class="bg-green-900 rounded-lg border border-yellow-600 hover:shadow-2xl transition-shadow duration-300 overflow-hidden">
+          <!-- Thumbnail -->
+          <div class="aspect-[16/9] relative overflow-hidden">
+            {% if product.thumbnail %}
+              <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+            {% else %}
+              <div class="w-full h-full bg-green-800"></div>
+            {% endif %}
+
+            <!-- Category Badge -->
+            <div class="absolute top-3 left-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-yellow-400 text-green-950">
+                {{ product.get_category_display }}
+              </span>
+            </div>
+
+            <!-- Status Badge -->
+            {% if product.is_featured %}
+              <div class="absolute top-3 right-3">
+                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                  ✨ Featured
+                </span>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Content -->
+          <div class="p-5">
+            <div class="flex items-center text-sm text-yellow-200 mb-3">
+              <time datetime="{{ product.created_at|date:'c' }}">
+                {{ product.created_at|date:"M j, Y" }}
+              </time>
+              {% if product.product_views %}
+                <span class="mx-2">•</span>
+                <span>{{ product.product_views }} views</span>
+              {% endif %}
+            </div>
+
+            <h3 class="text-lg font-semibold text-yellow-300 mb-2 leading-tight">
+              {{ product.name }}
+            </h3>
+
+            <p class="text-green-100 text-sm mb-2">
+              Rp {{ product.price }}
+            </p>
+
+            <p class="text-green-100 text-sm leading-relaxed line-clamp-3 mb-4">
+              {{ product.description|truncatewords:20 }}
+            </p>
+
+            <!-- Action Buttons -->
+            {% if user.is_authenticated and product.user == user %}
+              <div class="flex items-center justify-between pt-4 border-t border-yellow-700">
+                <a href="{% url 'main:show_product' product.id %}" class="text-yellow-400 hover:text-yellow-500 font-medium text-sm transition-colors">
+                  Read more
+                </a>
+                <div class="flex space-x-2">
+                  <a href="{% url 'main:edit_product' product.id %}" class="text-green-200 hover:text-green-300 text-sm transition-colors">
+                    Edit
+                  </a>
+                  <a href="{% url 'main:delete_product' product.id %}" class="text-red-400 hover:text-red-500 text-sm transition-colors">
+                    Delete
+                  </a>
+                </div>
+              </div>
+            {% else %}
+              <div class="pt-4 border-t border-yellow-700">
+                <a href="{% url 'main:show_product' product.id %}" class="text-yellow-400 hover:text-yellow-500 font-medium text-sm transition-colors">
+                  Read more →
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
 </div>
-
-<hr>
-{% endfor %}
-
-{% endif %}
-
+{% endblock content %}

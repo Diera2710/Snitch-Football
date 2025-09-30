@@ -21,14 +21,26 @@ def show_main(request):
         product_list = Product.objects.all()
     else:
         product_list = Product.objects.filter(user=request.user)
-    
+
+    # Ambil cookie last_login
+    raw_last_login = request.COOKIES.get('last_login')
+    formatted_login = "Never"
+    if raw_last_login:
+        try:
+            # Coba parse datetime string dari cookie
+            dt = datetime.datetime.fromisoformat(raw_last_login)
+            formatted_login = dt.strftime("%d %B %Y, %H:%M:%S")
+        except:
+            # fallback kalau formatnya masih string biasa
+            formatted_login = raw_last_login
 
     context = {
-        'product_list' : product_list,
-        'last_login': request.COOKIES.get('last_login', 'Never')
+        'product_list': product_list,
+        'last_login': formatted_login
     }
 
     return render(request, "main.html", context)
+
 
 def create_product(request):
     form = ProductForm(request.POST or None)
@@ -90,6 +102,8 @@ def register(request):
     context = {'form':form}
     return render(request, 'register.html', context)
 
+from django.utils import timezone
+
 def login_user(request):
    if request.method == 'POST':
       form = AuthenticationForm(data=request.POST)
@@ -98,7 +112,8 @@ def login_user(request):
             user = form.get_user()
             login(request, user)
             response = HttpResponseRedirect(reverse("main:show_main"))
-            response.set_cookie('last_login', str(datetime.datetime.now()))
+            # simpan last_login pakai timezone Asia/Jakarta (default Django settings TIME_ZONE)
+            response.set_cookie('last_login', timezone.localtime(timezone.now()).isoformat())
             return response
 
    else:
@@ -106,8 +121,27 @@ def login_user(request):
    context = {'form': form}
    return render(request, 'login.html', context)
 
+
 def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+def edit_product(request, id):
+    product = get_object_or_404(Product, pk=id)
+    form = ProductForm(request.POST or None, instance=product)
+    if form.is_valid() and request.method == 'POST':
+        form.save()
+        return redirect('main:show_main')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, "edit_product.html", context)
+
+def delete_product(request, id):
+    product = get_object_or_404(Product, pk=id)
+    product.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
