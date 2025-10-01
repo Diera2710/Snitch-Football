@@ -89,3 +89,47 @@ Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-b
 
 
 ==================================TUGAS 5=================================
+Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+jika terdapat beberapa CSS selector, browser akan memilih berdasarkan tingkat kekhususan selector, selector dengan kekhususan tertinggi akan diprioritaskan. urutan prioritasnya berlaku: 
+!important
+Inline style (<div style="color:red">)
+ID selector (#id-name)
+Class, attribute, pseudo-class (.btn, :hover)
+Tag HTML (p, h1)
+
+Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design, serta jelaskan mengapa!
+pada project django ini, semua halaman dimulai dari main.html, detail product, register, login, hingga register serta lainnya sudah dibuat responsive menggunakan tailwind. responsive design sangat penting untuk sebuah web karena user membuka web bisa jadi menggunakan handphone atau komputer, nah jika tidak responsive, bentuk web akan berantakan di layar kecil, seperti beberapa tombol tidak keluar di layar dan susunan yang tidak rapi. contoh aplikasi yang sudah menerapkan responsive design adalah Instagram, Facebook, X, dan Whatsapp.
+
+Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+Padding adalah ruang di dalam elemen, tepatnya jarak antara konten (misalnya teks nama produk atau harga) dengan batas dalam elemen. Dengan kata lain, padding membuat konten “bernapas” di dalam box. Border adalah garis tepi yang membungkus padding dan konten; border sering digunakan sebagai aksen visual seperti garis emas di sekitar kartu produk yang kita buat. Margin adalah ruang di luar border, yaitu jarak antara elemen tersebut dengan elemen lain di sekitarnya, misalnya jarak antar card produk di halaman utama.
+Di proyek ini, kita mengimplementasikan ketiga hal tersebut menggunakan utilitas Tailwind. Misalnya, p-5 digunakan untuk memberi padding pada card agar teks produk tidak menempel ke tepi card. Kemudian border border-yellow-600 digunakan untuk menambahkan garis emas di sekitar card agar sesuai dengan tema Harry Potter. Sedangkan m-4 dipakai sebagai margin untuk memberi jarak antar card produk sehingga layout grid lebih rapi. Dengan kombinasi margin, border, dan padding, tampilan halaman jadi lebih terstruktur, mudah dibaca, dan nyaman dilihat, baik di layar besar maupun kecil.
+
+
+Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+Flexbox (Flexible Box) digunakan untuk mengatur elemen dalam satu dimensi, baik itu baris atau kolom. Flexbox memudahkan kita untuk meratakan elemen ke tengah, memberi jarak antar item, atau mendistribusikan ruang kosong secara otomatis. Misalnya pada navbar.html
+Grid Layout digunakan untuk mengatur elemen dalam dua dimensi: baris dan kolom. Konsep grid sangat bermanfaat untuk menampilkan daftar produk dalam bentuk card.
+Kedua konsep ini saling melengkapi: flexbox sangat berguna untuk menata bagian-bagian kecil seperti form input atau navbar, sedangkan grid lebih cocok untuk layout utama seperti daftar produk. Dengan memanfaatkan keduanya, aplikasi Django kita bisa tampil rapi, responsif, dan tetap konsisten di berbagai perangkat.
+
+Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+1. Menambahkan Tailwind ke aplikasi
+Saya mengintegrasikan Tailwind ke dalam project Django agar lebih mudah styling. File base.html
+sudah dihubungkan dengan Tailwind, dan setiap halaman (login, register, main, detail, create, edit)
+saya beri class-class Tailwind untuk konsistensi styling.
+2. Menambahkan fitur Edit Product pada aplikasi
+Saya membuat view edit_product di views.py, menambahkan path /product//edit di urls.py, serta
+menambahkan tombol Edit di card produk. Halaman edit_product.html dibuat dengan form pre-filled
+dari ProductForm.
+3. Menambahkan fitur Hapus Product pada aplikasi
+Saya membuat view delete_product yang menghapus object lalu redirect ke halaman utama.
+Tombol Delete ditampilkan di card produk hanya jika user adalah pemilik produk.
+4. Menambahkan Navigation Bar pada aplikasi
+Saya membuat file navbar.html yang reusable, lalu include di semua template dengan {% include
+'navbar.html' %}.
+5. Konfigurasi static files pada aplikasi
+Saya memastikan konfigurasi STATIC_URL dan STATICFILES_DIRS sudah benar di settings.py,
+sehingga Tailwind CSS, custom CSS, dan gambar (misalnya no-product.png) bisa di-load dengan
+{% static %}.
+6. Styling pada aplikasi dengan Tailwind dan external CSS
+Selain Tailwind, saya juga menambahkan sedikit custom CSS untuk form (form-style) supaya input
+dan checkbox lebih menarik. Tema keseluruhan saya buat Harry Potter dengan kombinasi hijau
+tua, emas, dan aksen kuning.
