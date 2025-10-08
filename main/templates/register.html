@@ -39,7 +39,7 @@
           </div>
         {% endif %}
 
-        <form method="POST" action="" class="space-y-5">
+        <form method="POST" action="" class="space-y-5" id="registerForm">
           {% csrf_token %}
           
           <div>
@@ -115,4 +115,64 @@
     </div>
   </div>
 </div>
+
+<!-- === ADDED: AJAX Register === -->
+<script>
+(function(){
+  const form = document.getElementById('registerForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const defaultText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating...';
+
+    const formData = new FormData(form);
+    const csrf = formData.get('csrfmiddlewaretoken');
+
+    try {
+      const res = await fetch("{% url 'main:register' %}", {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRFToken': csrf
+        },
+        body: formData,
+        credentials: 'same-origin'
+      });
+
+      // Jika view meng-redirect ke login (register sukses)
+      if (res.redirected) {
+        if (typeof showToast === 'function') showToast('Registrasi berhasil', 'Silakan login.', 'success');
+        window.location.href = res.url;
+        return;
+      }
+
+      const ct = res.headers.get('Content-Type') || '';
+      if (ct.includes('application/json')) {
+        const data = await res.json();
+        if (data && data.success) {
+          if (typeof showToast === 'function') showToast('Registrasi berhasil', 'Silakan login.', 'success');
+          window.location.href = "{% url 'main:login' %}";
+        } else {
+          const msg = (data && (data.message || data.detail)) || 'Periksa kembali input Anda.';
+          if (typeof showToast === 'function') showToast('Registrasi gagal', msg, 'error');
+        }
+        return;
+      }
+
+      // Fallback: asumsikan ada error validasi
+      if (typeof showToast === 'function') showToast('Registrasi gagal', 'Periksa kembali input Anda.', 'error');
+    } catch (err) {
+      console.error(err);
+      if (typeof showToast === 'function') showToast('Registrasi gagal', 'Terjadi kesalahan jaringan.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = defaultText;
+    }
+  });
+})();
+</script>
 {% endblock content %}

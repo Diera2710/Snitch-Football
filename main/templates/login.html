@@ -38,7 +38,7 @@
         </div>
       {% endif %}
 
-      <form method="POST" action="" class="space-y-6">
+      <form method="POST" action="" class="space-y-6" id="loginForm">
         {% csrf_token %}
         
         <div>
@@ -102,4 +102,65 @@
     </div>
   </div>
 </div>
+
+<!-- === ADDED: AJAX Login === -->
+<script>
+(function(){
+  const form = document.getElementById('loginForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const defaultText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing in...';
+
+    const formData = new FormData(form);
+    const csrf = formData.get('csrfmiddlewaretoken');
+
+    try {
+      const res = await fetch("{% url 'main:login' %}", {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRFToken': csrf
+        },
+        body: formData,
+        credentials: 'same-origin'
+      });
+
+      // Jika view meng-redirect (login sukses), fetch akan follow redirect → res.redirected = true
+      if (res.redirected) {
+        if (typeof showToast === 'function') showToast('Login sukses', 'Selamat datang kembali!', 'success');
+        window.location.href = res.url;
+        return;
+      }
+
+      // Jika server balikin JSON (kalau kamu nanti update view), baca errornya
+      const ct = res.headers.get('Content-Type') || '';
+      if (ct.includes('application/json')) {
+        const data = await res.json();
+        if (data && data.success) {
+          if (typeof showToast === 'function') showToast('Login sukses', '', 'success');
+          window.location.href = "{% url 'main:show_main' %}";
+        } else {
+          const msg = (data && (data.message || data.detail)) || 'Username atau password salah.';
+          if (typeof showToast === 'function') showToast('Login gagal', msg, 'error');
+        }
+        return;
+      }
+
+      // Fallback: anggap invalid credentials
+      if (typeof showToast === 'function') showToast('Login gagal', 'Username atau password salah.', 'error');
+    } catch (err) {
+      console.error(err);
+      if (typeof showToast === 'function') showToast('Login gagal', 'Terjadi kesalahan jaringan.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = defaultText;
+    }
+  });
+})();
+</script>
 {% endblock content %}

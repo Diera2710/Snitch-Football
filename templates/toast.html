@@ -1,0 +1,43 @@
+<div id="toast-component"
+     class="fixed right-6 bottom-6 z-[9999] rounded-lg border shadow-lg px-4 py-3
+            opacity-0 translate-y-64 pointer-events-none transition-all duration-200 transform">
+  <div class="font-semibold" id="toast-title"></div>
+  <div class="text-sm mt-0.5" id="toast-message"></div>
+</div>
+
+<script>
+function showToast(title, message, type = 'normal', duration = 3000) {
+  const el   = document.getElementById('toast-component');
+  const t    = document.getElementById('toast-title');
+  const m    = document.getElementById('toast-message');
+  if (!el) return;
+
+  el.classList.remove(
+    'bg-red-50','border-red-500','text-red-600',
+    'bg-green-50','border-green-500','text-green-600',
+    'bg-white','border-gray-300','text-gray-800',
+    'bg-green-900','border-yellow-500','text-yellow-200',
+    'bg-red-900','border-red-500','text-red-100',
+    'bg-green-950','border-green-700'
+  );
+
+  if (type === 'success') {
+    el.classList.add('bg-green-900','border-yellow-500','text-yellow-200');
+  } else if (type === 'error') {
+    el.classList.add('bg-red-900','border-red-500','text-red-100');
+  } else {
+    el.classList.add('bg-green-950','border-green-700','text-yellow-200');
+  }
+
+  t.textContent = title || '';
+  m.textContent = message || '';
+  el.classList.remove('opacity-0','translate-y-64');
+  el.classList.add('opacity-100','translate-y-0');
+
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => {
+    el.classList.remove('opacity-100','translate-y-0');
+    el.classList.add('opacity-0','translate-y-64');
+  }, duration);
+}
+</script>
