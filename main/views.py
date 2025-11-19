@@ -340,3 +340,27 @@ def create_product_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
 
     return JsonResponse({"status": "error"}, status=401)
+
+def show_json_user(request):
+    # Kalau belum login, balikin list kosong saja
+    if not request.user.is_authenticated:
+        return JsonResponse([], safe=False)
+
+    # Hanya ambil produk milik user yang sedang login
+    product_list = Product.objects.filter(user=request.user)
+
+    data = [
+        {
+            'id': product.id,
+            'name': product.name,
+            'price': product.price,
+            'description': product.description,
+            'thumbnail': product.thumbnail,
+            'category': product.category,
+            'is_featured': product.is_featured,
+            'user_id': product.user.id if product.user else None,
+        }
+        for product in product_list
+    ]
+
+    return JsonResponse(data, safe=False)

@@ -7,6 +7,7 @@ from main.views import (
     update_product_entry_ajax, delete_product_entry_ajax,
     add_product_entry_ajax,
     create_product_flutter,  
+    show_json_user
 )
 
 app_name = 'main'
@@ -41,6 +42,8 @@ urlpatterns = [
     path('product/<int:id>/', show_product, name='show_product'),
     path('product/<int:id>/edit', edit_product, name='edit_product'),
     path('product/<int:id>/delete', delete_product, name='delete_product'),
+    path('product/json/user/', show_json_user, name='show_json_user'),
+
 
     # === PROXY IMAGE ===
     path('proxy-image/', proxy_image, name='proxy_image'),
