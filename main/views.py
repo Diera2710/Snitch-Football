@@ -14,6 +14,11 @@ from main.forms import ProductForm
 from main.models import Product
 from django.http import HttpResponse
 from django.core import serializers
+import requests
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.html import strip_tags
+import json
+from django.http import JsonResponse
 # Create your views here.
 
 @login_required(login_url='/login')
@@ -66,7 +71,14 @@ def add_product_entry_ajax(request):
     )
     new_product.save()
 
-    return HttpResponse(b"CREATED", status=201)
+    # 🔥 BALAS DENGAN JSON, BUKAN "CREATED" PLAIN TEXT
+    return JsonResponse({
+        "status": "success",
+        "message": "Product created",
+        "id": new_product.id,
+        "name": new_product.name,
+    }, status=201)
+
 
 
 def create_product(request):
@@ -251,3 +263,80 @@ def delete_product_entry_ajax(request, id):
 
     product.delete()
     return JsonResponse({'deleted': True})
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
+    
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        name = strip_tags(data.get("name", ""))
+        price = data.get("price", 0)
+        description = strip_tags(data.get("description", ""))
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        is_featured = data.get("is_featured", False)
+
+        user = request.user  # boleh AnonymousUser sesuai tutorial
+
+        new_product = Product(
+            name=name,
+            price=price,
+            description=description,
+            category=category,
+            thumbnail=thumbnail,
+            is_featured=is_featured,
+            user=user,
+        )
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+
+    return JsonResponse({"status": "error"}, status=401)
+
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        name = strip_tags(data.get("name", ""))
+        price = data.get("price", 0)
+        description = strip_tags(data.get("description", ""))
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        is_featured = data.get("is_featured", False)
+
+        user = request.user  # boleh AnonymousUser, tutorial memang gini
+
+        new_product = Product(
+            name=name,
+            price=price,
+            description=description,
+            category=category,
+            thumbnail=thumbnail,
+            is_featured=is_featured,
+            user=user,
+        )
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+
+    return JsonResponse({"status": "error"}, status=401)

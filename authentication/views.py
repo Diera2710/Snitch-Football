@@ -3,6 +3,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 import json
+from django.contrib.auth import logout as auth_logout
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 
 @csrf_exempt
@@ -91,3 +94,19 @@ def logout(request):
         "status": False,
         "message": "You are not logged in.",
     }, status=401)
+
+@csrf_exempt
+def logout(request):
+    username = request.user.username if request.user.is_authenticated else ""
+    try:
+        auth_logout(request)
+        return JsonResponse({
+            "username": username,
+            "status": True,
+            "message": "Logged out successfully!"
+        }, status=200)
+    except Exception as e:
+        return JsonResponse({
+            "status": False,
+            "message": "Logout failed."
+        }, status=401)
